@@ -5,8 +5,11 @@
   <link rel="stylesheet" type="text/css" href="app.css">
 </head>
 <body>
-<div id="wrapper">
 
+  <div id="wrapper">
+    <% if flash[:notice] %>
+      <p class="green"><%= flash[:notice] %></p>
+    <% end %>
 
   <div>
     <%= yield %>

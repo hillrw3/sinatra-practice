@@ -13,7 +13,11 @@ class App < Sinatra::Application
   end
 
   get "/" do
-    erb :root
+    if session[:user] != []
+      erb :logged_in
+    else
+      erb :root
+    end
   end
 
   get "/registration" do
@@ -24,8 +28,25 @@ class App < Sinatra::Application
     username = params[:username]
     password = params[:password]
     @user_database.insert({username: username, password: password})
-    redirect '/'
     flash[:notice] = "Thanks for registering!"
+    redirect '/'
+  end
+
+  post "/login" do
+    active_user = @user_database.all.find do |user_hash|
+      params[:username] == user_hash[:username] && params[:password] == user_hash[:password]
+    end
+    if active_user != []
+      session[:user] = active_user[:id]
+      redirect '/'
+    else
+      flash[:notice] = "Yikes! User and password not found."
+    end
+  end
+
+  get '/logout' do
+    session[:user] = []
+    redirect '/'
   end
 
 end
