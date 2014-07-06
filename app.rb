@@ -15,4 +15,17 @@ class App < Sinatra::Application
   get "/" do
     erb :root
   end
+
+  get "/registration" do
+    erb :registration
+  end
+
+  post "/registration" do
+    username = params[:username]
+    password = params[:password]
+    @user_database.insert({username: username, password: password})
+    redirect '/'
+    flash[:notice] = "Thanks for registering!"
+  end
+
 end
